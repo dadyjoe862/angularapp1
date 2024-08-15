@@ -1,83 +1,18 @@
+
 pipeline {
-    // Define the agent to run the pipeline on
     agent any
-
-    // Define environment variables
-    environment {
-        // Example of an environment variable
-        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk'
+    stages{
+        stage("world"){
+            steps{
+            echo 'hellow wors'
+}
     }
 
-    // Define the stages of the pipeline
-    stages {
-        // Checkout stage
-        stage('Checkout') {
-            steps {
-                // Checkout code from a version control system (e.g., Git)
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/example/repo.git']]])
+        stage("africa"){
+            steps{
+                echo "hellow africa"
             }
         }
-
-        // Build stage
-        stage('Build') {
-            steps {
-                // Print a message
-                echo 'Building the application...'
-
-                // Example of a build command
-                sh './gradlew build'
-            }
         }
 
-        // Test stage
-        stage('Test') {
-            steps {
-                // Print a message
-                echo 'Running tests...'
-
-                // Example of a test command
-                sh './gradlew test'
-            }
-
-            // Define post actions for the test stage
-            post {
-                // Archive test results even if the test stage fails
-                always {
-                    junit '**/build/test-results/test/*.xml'
-                }
-
-                // Mark the build as unstable if there are test failures
-                unsuccessful {
-                    echo 'Some tests failed. Marking the build as unstable.'
-                    unstable 'Some tests failed'
-                }
-            }
-        }
-
-        // Deploy stage
-        stage('Deploy') {
-            steps {
-                // Print a message
-                echo 'Deploying the application...'
-
-                // Example of a deploy command
-                sh 'scp build/libs/app.jar user@server:/deployments/'
-            }
-        }
-    }
-
-    // Define post actions for the entire pipeline
-    post {
-        // Clean up workspace after the build
-        always {
-            cleanWs()
-        }
-
-        // Notify if the build fails
-        failure {
-            mail to: 'team@example.com',
-                 subject: "Build failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                 body: "The build ${env.JOB_NAME} [${env.BUILD_NUMBER}] failed. Check the console output for more details: ${env.BUILD_URL}"
-        }
-    }
 }
